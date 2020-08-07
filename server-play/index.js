@@ -1,4 +1,5 @@
 const http = require('http');
+const fs = require('fs');
 
 const server = http.createServer((req, res) => {
   const pathname = req.url;
@@ -7,9 +8,21 @@ const server = http.createServer((req, res) => {
     res.end('this is overview bissssh');
   } else if (pathname === '/product') {
     res.end('WHatta Pradact!');
+  } else if (pathname === '/api') {
+    fs.readFile(`${__dirname}/data/data.json`, 'utf-8', (err, data) => {
+      const product = JSON.parse(data);
+
+      console.log(product);
+
+      res.writeHead(200, {
+        'Content-Type': 'application/json',
+      });
+
+      res.end(data);
+    });
   } else {
     res.writeHead(404, {
-      'Content-Type': 'text/html',
+      'Content-Type': 'application/json',
       'x-prrrede': 'predicting sheeet',
     });
 
