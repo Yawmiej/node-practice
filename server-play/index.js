@@ -1,5 +1,6 @@
 const http = require('http');
 const fs = require('fs');
+const url = require('url');
 
 const product = fs.readFileSync(`${__dirname}/templates/product.html`, 'utf-8');
 const overview = fs.readFileSync(
@@ -19,6 +20,7 @@ const replaceTemplate = (template = '', product) => {
   output = output.replace(/{%QUANTITIY%}/g, product.quantity);
   output = output.replace(/{%ID%}/g, product.id);
   output = output.replace(/{%DESCRIPTION%}/g, product.description);
+  output = output.replace(/{%FROM%}/g, product.from);
 
   if (!product.organic) {
     output = output.replace(/{%NOT_ORGANIC%}/g, 'not-organic');
@@ -29,6 +31,7 @@ const replaceTemplate = (template = '', product) => {
 
 const server = http.createServer((req, res) => {
   const pathname = req.url;
+  const urlParams = url.parse(pathname, true);
 
   //Overview Page
   if (pathname === ('/' || '/overview')) {
@@ -42,8 +45,12 @@ const server = http.createServer((req, res) => {
     res.end(output);
 
     //Product Page
-  } else if (pathname === '/product') {
-    res.end(product);
+  } else if (pathname === `/product${urlParams.search}`) {
+    const { id } = urlParams.query;
+    const productData = dataObj.find((data) => data.id == id);
+    const output = replaceTemplate(product, productData);
+
+    res.end(output);
 
     //API
   } else if (pathname === '/api') {
