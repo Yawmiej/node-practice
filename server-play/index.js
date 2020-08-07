@@ -47,7 +47,7 @@ const server = http.createServer((req, res) => {
     //Product Page
   } else if (pathname === `/product${urlParams.search}`) {
     const { id } = urlParams.query;
-    const productData = dataObj.find((data) => data.id == id);
+    const productData = dataObj.find((data) => data.id === Number(id));
     const output = replaceTemplate(product, productData);
 
     res.end(output);
@@ -62,7 +62,7 @@ const server = http.createServer((req, res) => {
     //Not Found
   } else {
     res.writeHead(404, {
-      'Content-Type': 'application/json',
+      'Content-Type': 'text/html',
       'x-prrrede': 'predicting sheeet',
     });
 
