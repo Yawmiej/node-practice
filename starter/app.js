@@ -10,15 +10,15 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
 
-app.get('/api/v1/tours', (req, res) => {
+const getAllTours = (req, res) => {
   res.status(200).json({
     status: 'success',
     result: tours.length,
     data: tours,
   });
-});
+};
 
-app.get('/api/v1/tours/:id', (req, res) => {
+const getTour = (req, res) => {
   const { id } = req.params;
   const tour = tours.find((tour) => tour.id === Number(id));
 
@@ -36,9 +36,9 @@ app.get('/api/v1/tours/:id', (req, res) => {
     status: 'fail',
     message: 'tour not found',
   });
-});
+};
 
-app.post('/api/v1/tours', (req, res) => {
+const createTour = (req, res) => {
   const postId = tours[tours.length - 1].id + 1;
   const newTour = Object.assign({ id: postId }, req.body);
 
@@ -50,7 +50,11 @@ app.post('/api/v1/tours', (req, res) => {
       res.status(201).json({ status: 'success', data: { tour: newTour } });
     }
   );
-});
+};
+
+app.route('/api/v1/tours').get(getAllTours).post(createTour);
+
+app.route('/api/v1/tours/:id').get(getTour);
 
 const port = 4000;
 app.listen(port, () => {
