@@ -55,9 +55,24 @@ const createTour = (req, res) => {
   );
 };
 
-app.route('/api/v1/tours').get(getAllTours).post(createTour);
+const handleUser = (req, res) => {
+  res
+    .status(500)
+    .json({ status: 'error', message: 'User routes not implemented' });
+};
 
-app.route('/api/v1/tours/:id').get(getTour);
+//Define the route groups
+const toursRouter = express.Router();
+const usersRouter = express.Router();
+
+//Mount the route handlers in middleware
+app.use('/api/v1/tours', toursRouter);
+app.use('/api/v1/users', usersRouter);
+
+//Define the routes
+toursRouter.route('/').get(getAllTours).post(createTour);
+toursRouter.route('/:id').get(getTour);
+usersRouter.route('/').get(handleUser);
 
 const port = 4000;
 app.listen(port, () => {
