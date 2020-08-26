@@ -1,13 +1,8 @@
 const express = require('express');
+const userController = require('../controllers/userController');
 
 const usersRouter = express.Router();
 
-const handleUser = (req, res) => {
-  res
-    .status(500)
-    .json({ status: 'error', message: 'User routes not implemented' });
-};
-
-usersRouter.route('/').get(handleUser);
+usersRouter.route('/').get(userController.handleUser);
 
 module.exports = usersRouter;
