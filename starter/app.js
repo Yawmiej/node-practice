@@ -7,10 +7,10 @@ const usersRouter = require('./routes/users');
 
 const app = express();
 
+//Middleware
 app.use(morgan('dev'));
-
-//Middleware to allow request body data
 app.use(express.json());
+app.use(express.static(`${__dirname}/public`));
 
 //Mount the route handlers in middleware
 app.use('/api/v1/tours', toursRouter);
