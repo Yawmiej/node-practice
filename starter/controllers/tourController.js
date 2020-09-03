@@ -1,41 +1,56 @@
-exports.checkBody = (req, res, next) => {
-  if (!req.body.name || !req.body.price) {
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Tour name or price missing',
-    });
-  }
-  next();
-};
+const Tour = require('../model/toursModel');
 
 //Controllers
-exports.getAllTours = (req, res) => {
-  // res.status(200).json({
-  //   status: 'success',
-  //   result: tours.length,
-  //   data: tours,
-  // });
+exports.getAllTours = async (req, res) => {
+  try {
+    const tours = await Tour.find();
+    res.status(200).json({
+      status: 'success',
+      total: tours.length,
+      data: tours,
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: 'Resource not found',
+    });
+  }
 };
 
-exports.getTour = (req, res) => {
-  const { id } = req.params;
-  // const tour = tours.find((tor) => tor.id === Number(id));
-  // if (tour) {
-  //   res.status(200).json({
-  //     status: 'success',
-  //     data: {
-  //       tour,
-  //     },
-  //   });
-  //   return;
-  // }
+exports.getTour = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const tour = await Tour.findById(id);
 
-  res.status(404).json({
-    status: 'fail',
-    message: 'tour not found',
-  });
+    res.status(200).json({
+      status: 'success',
+      data: {
+        tour,
+      },
+    });
+    return;
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err,
+    });
+  }
 };
 
-exports.createTour = (req, res) => {
-  res.status(201).json({ status: 'success', data: { tour: '' } });
+exports.createTour = async (req, res) => {
+  try {
+    const newTour = await Tour.create(req.body);
+
+    res.status(201).json({
+      status: 'success',
+      data: {
+        tour: newTour,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: err,
+    });
+  }
 };

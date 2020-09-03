@@ -7,7 +7,7 @@ const toursRouter = express.Router();
 toursRouter
   .route('/')
   .get(tourController.getAllTours)
-  .post(tourController.checkBody, tourController.createTour);
+  .post(tourController.createTour);
 toursRouter.route('/:id').get(tourController.getTour);
 
 module.exports = toursRouter;
