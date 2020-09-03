@@ -14,6 +14,10 @@ const tourSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'Price must be set'],
   },
+  difficulty: {
+    type: String,
+    default: 'easy',
+  },
 });
 
 const Tour = mongoose.model('Tour', tourSchema);
